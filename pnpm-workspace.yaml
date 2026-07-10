@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: true
+# Configuración de pnpm (nuevo hogar de settings, ya no en package.json).
+# Permitir que estas dependencias ejecuten sus build scripts nativos.
+onlyBuiltDependencies:
+  - esbuild
+  - "@tailwindcss/oxide"

@@ -1,0 +1,141 @@
+/* Visor 360 brutalista b/n. Scope: .unit-tour */
+.unit-tour {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+  user-select: none;
+}
+
+.unit-tour__pano {
+  position: absolute;
+  inset: 0;
+}
+
+/* Estado de carga / error */
+.unit-tour__status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  background: #000;
+}
+
+/* Lista de escenas (habitaciones) */
+.unit-tour__scenes {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 15;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  max-height: 50vh;
+  overflow: auto;
+  min-width: 160px;
+}
+
+.unit-tour__scene {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid #000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  background: #fff;
+  color: #000;
+}
+
+.unit-tour__scene:last-child {
+  border-bottom: 0;
+}
+
+.unit-tour__scene:hover {
+  background: #f2f2f2;
+}
+
+.unit-tour__scene.is-active {
+  background: #000;
+  color: #fff;
+}
+
+/* Hotspots */
+.unit-tour .hotspot {
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.unit-tour .link-hotspot {
+  width: 34px;
+  height: 34px;
+}
+
+.unit-tour .link-hotspot svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+  transition: transform 150ms ease;
+}
+
+.unit-tour .link-hotspot:hover svg {
+  transform: scale(1.15);
+}
+
+.unit-tour .info-hotspot {
+  width: 30px;
+  height: 30px;
+}
+
+.unit-tour .info-hotspot__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.unit-tour .info-hotspot__box {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  width: 240px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  padding: 10px 12px;
+  display: none;
+}
+
+.unit-tour .info-hotspot.is-open .info-hotspot__box {
+  display: block;
+}
+
+.unit-tour .info-hotspot__title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  margin-bottom: 4px;
+}
+
+.unit-tour .info-hotspot__text {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
