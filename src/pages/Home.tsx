@@ -100,7 +100,7 @@ export default function Home() {
           <div className="pointer-events-auto flex flex-wrap gap-3">
             <Link
               to={interioresTo}
-              className="u-label border border-[var(--fg-inverse)] bg-[var(--fg-inverse)] px-5 py-3 text-[var(--bg-inverse)] transition-opacity hover:opacity-80"
+              className="u-label border border-[var(--fg)] bg-[var(--bg)] px-5 py-3 text-[var(--fg)] transition-opacity hover:opacity-80"
             >
               {HERO.ctas.interiores}
             </Link>

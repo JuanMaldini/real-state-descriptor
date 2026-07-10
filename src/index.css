@@ -32,6 +32,13 @@ body,
   height: 100%;
 }
 
+/* Reserva siempre el ancho de la barra de scroll. Así el área de contenido
+   mantiene el mismo ancho en páginas con scroll (Home) y sin scroll (Pisos),
+   y los items del navbar (fixed, anclados a la derecha) no saltan al navegar. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   background: var(--bg);
