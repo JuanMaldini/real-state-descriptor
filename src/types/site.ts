@@ -60,11 +60,21 @@ export interface Tour360 {
   floorplanScenePositions: FloorplanScenePosition[];
 }
 
+/** Posición relativa (0..1) de una unidad sobre el floorplan del piso, para el
+ *  hotspot clickeable que la abre. Origen arriba-izquierda de la imagen. */
+export interface UnitHotspot {
+  x: number;
+  y: number;
+}
+
 export interface Unit {
   unitId: string;
   label: string;
   renders: ImageRef[];
   tour360: Tour360;
+  /** Ubicación del hotspot sobre el floorplan. Sin esto, la unidad no dibuja
+   *  marcador (queda accesible sólo cuando se le asignan coordenadas). */
+  hotspot?: UnitHotspot;
 }
 
 export interface Floor {

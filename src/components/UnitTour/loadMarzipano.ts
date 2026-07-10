@@ -1,5 +1,5 @@
 import { MARZIPANO } from "../../config/config";
-
+  
 // Carga el script vendored de Marzipano una sola vez y resuelve cuando
 // window.Marzipano está disponible.
 let promise: Promise<any> | null = null;

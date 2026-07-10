@@ -74,20 +74,31 @@ export default function NavBar() {
           className="absolute left-0 right-0 bg-[var(--bg)] u-border-b flex flex-col"
           style={{ top: "var(--nav-h)" }}
         >
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === ROUTES.home}
-              className={({ isActive }) =>
-                `u-label py-4 px-6 u-border-b last:border-b-0 ${
-                  isActive ? "bg-[var(--fg)] text-[var(--fg-inverse)]" : ""
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.to.includes("#") ? (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="u-label py-4 px-6 u-border-b last:border-b-0"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === ROUTES.home}
+                className={({ isActive }) =>
+                  `u-label py-4 px-6 u-border-b last:border-b-0 ${
+                    isActive ? "bg-[var(--fg)] text-[var(--fg-inverse)]" : ""
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </nav>
       )}
     </header>
@@ -95,6 +106,18 @@ export default function NavBar() {
 }
 
 function NavItemLink({ to, label }: { to: string; label: string }) {
+  // Enlaces con hash (secciones del Home, ej. #galeria) no tienen estado activo
+  // por ruta: se renderizan como Link simple.
+  if (to.includes("#")) {
+    return (
+      <Link
+        to={to}
+        className="u-label pb-1 border-b-2 border-transparent transition-colors hover:border-[var(--muted)]"
+      >
+        {label}
+      </Link>
+    );
+  }
   return (
     <NavLink
       to={to}

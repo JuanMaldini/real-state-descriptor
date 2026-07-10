@@ -72,8 +72,6 @@ export const LAYOUT = {
   /** A partir de este ancho (px) el nav muestra items inline; por debajo, burger. */
   navInlineMinPx: 1024,
   navHeightPx: 56,
-  /** Ancho de la sidebar de pisos (Building/Aerial) en desktop. */
-  floorSidebarPx: 240,
   contentMaxPx: 1600,
 } as const;
 
@@ -82,13 +80,13 @@ export const LAYOUT = {
 // -----------------------------------------------------------------------------
 export const ROUTES = {
   home: "/",
-  gallery: "/galeria",
+  /** La galería es una sección del Home; el nav hace scroll a #galeria. */
+  gallery: "/#galeria",
   building: "/pisos",
   floor: (floorId: string) => `/pisos/${floorId}`,
   tour: (floorId: string, unitId: string) => `/tour/${floorId}/${unitId}`,
-  aerial: "/aerial",
-  aerialFloor: (floorId: string) => `/aerial/${floorId}`,
-  contact: "/contacto",
+  /** Contacto es una sección del Home; el nav (si aplica) hace scroll a #contacto. */
+  contact: "/#contacto",
 } as const;
 
 export interface NavItem {
@@ -96,12 +94,10 @@ export interface NavItem {
   to: string;
 }
 
-/** Orden pedido: Home, Galería, Pisos, Contacto. */
+/** Orden: Home, Pisos. Galería y Contacto son secciones del Home (no van en el nav). */
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", to: ROUTES.home },
-  { label: "Galería", to: ROUTES.gallery },
   { label: "Pisos", to: ROUTES.building },
-  { label: "Contacto", to: ROUTES.contact },
 ];
 
 // -----------------------------------------------------------------------------
@@ -112,7 +108,7 @@ export const HERO = {
   navZoneWidthPct: 22,
   ctas: {
     interiores: "Iniciar recorrido Interiores",
-    aerial: "Aerial",
+    pisos: "Ver plantas",
   },
 } as const;
 
@@ -145,12 +141,4 @@ export const CONTACT = {
   email: "info@edificio.com",
   /** URL de embed de mapa (Google Maps embed). Vacío = placeholder. */
   mapEmbedUrl: "",
-} as const;
-
-// -----------------------------------------------------------------------------
-// FLAGS — interruptores de features aún por definir.
-// -----------------------------------------------------------------------------
-export const FLAGS = {
-  /** Aerial: floorplan clickeable para saltar a una unidad (pendiente de decidir). */
-  aerialFloorplanClickable: false,
 } as const;
