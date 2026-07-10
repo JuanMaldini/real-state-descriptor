@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { useSite } from "../context/SiteContext";
 import { findFloor, findUnit } from "../lib/site";
+import { prioritizeFloor } from "../lib/preload";
 import UnitTour from "../components/UnitTour/UnitTour";
 import { ROUTES } from "../config/config";
 import { PageLoading } from "./Home";
@@ -11,6 +13,11 @@ import { PageLoading } from "./Home";
 export default function Tour() {
   const site = useSite();
   const { floorId, unitId } = useParams();
+
+  // Priorizar la precarga del piso de este tour.
+  useEffect(() => {
+    if (floorId) prioritizeFloor(floorId);
+  }, [floorId]);
 
   if (!site) return <PageLoading />;
   if (!floorId || !unitId) return <Navigate to="/404" replace />;

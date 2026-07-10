@@ -3,6 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import { useSite } from "../context/SiteContext";
 import { firstUnit } from "../lib/site";
 import { CONTACT, HERO, MOTION, ROUTES, SITE } from "../config/config";
+import Loader from "../components/Loader";
+import ImageWithLoader from "../components/ImageWithLoader";
+import { startPreload } from "../lib/preload";
 
 // Home: página única scrolleable. Hero navegable a pantalla completa, luego una
 // sección de descripción y, al fondo, la galería de renders (antes página aparte).
@@ -29,6 +32,11 @@ export default function Home() {
     const el = document.querySelector(location.hash);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   }, [location.hash, site]);
+
+  // Con el sitio cargado, arranca la precarga en background del resto de assets.
+  useEffect(() => {
+    if (site) startPreload(site);
+  }, [site]);
 
   if (!site) return <PageLoading />;
 
@@ -100,7 +108,8 @@ export default function Home() {
           <div className="pointer-events-auto flex flex-wrap gap-3">
             <Link
               to={interioresTo}
-              className="u-label border border-[var(--fg)] bg-[var(--bg)] px-5 py-3 text-[var(--fg)] transition-opacity hover:opacity-80"
+              className="u-label border px-5 py-3 transition-opacity hover:opacity-80"
+              style={{ background: "#ffffff", color: "#000000", borderColor: "#000000" }}
             >
               {HERO.ctas.interiores}
             </Link>
@@ -141,51 +150,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* GALERÍA — pantalla completa, al fondo */}
+      {/* GALERÍA — full-bleed, al fondo. Máx 2 por fila (desktop), 1 en tablet/móvil. */}
       <section
         id="galeria"
-        className="min-h-[calc(100dvh-var(--nav-h))] bg-[var(--muted-bg)] px-4 py-12 md:px-8"
+        className="bg-[var(--muted-bg)]"
         style={{ scrollMarginTop: "var(--nav-h)" }}
       >
-        <div className="mx-auto w-full max-w-[var(--content-max,1600px)]">
-          <h2 className="u-wordmark mb-6 text-2xl md:text-3xl">Galería</h2>
+        <h2 className="u-wordmark px-4 py-8 text-2xl md:px-8 md:text-3xl">
+          Galería
+        </h2>
 
-          {gallery.length === 0 ? (
-            <p className="u-label text-[var(--muted)]">Sin renders todavía.</p>
-          ) : (
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {gallery.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => setLightbox(item.imageUrl)}
-                    aria-label={`Ampliar ${item.title ?? item.id}`}
-                    className="block w-full border border-[var(--line)] bg-[var(--bg)] text-left transition-colors hover:border-[var(--muted)]"
-                  >
-                    <div className="aspect-[4/3] bg-[var(--muted-bg)]">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title ?? item.id}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    {(item.title || item.tags?.length) && (
-                      <div className="flex items-center justify-between gap-3 border-t border-[var(--line)] px-3 py-2">
-                        <span className="u-label">{item.title}</span>
-                        {item.tags?.length ? (
-                          <span className="u-label text-[var(--muted)]">
-                            {item.tags.join(" · ")}
-                          </span>
-                        ) : null}
-                      </div>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {gallery.length === 0 ? (
+          <p className="u-label px-4 pb-12 text-[var(--muted)] md:px-8">
+            Sin renders todavía.
+          </p>
+        ) : (
+          <ul className="grid grid-cols-1 lg:grid-cols-2">
+            {gallery.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => setLightbox(item.imageUrl)}
+                  aria-label={`Ampliar ${item.title ?? item.id}`}
+                  className="group relative block w-full overflow-hidden"
+                >
+                  <div className="relative aspect-[3/2] bg-[var(--muted-bg)]">
+                    <ImageWithLoader
+                      src={item.imageUrl}
+                      alt={item.title ?? item.id}
+                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* CONTACTO — sección al fondo del Home (antes página aparte). */}
@@ -277,10 +278,10 @@ function ContactRow({
 export function PageLoading() {
   return (
     <div
-      className="flex items-center justify-center u-label"
+      className="flex items-center justify-center"
       style={{ height: "calc(100dvh - var(--nav-h))" }}
     >
-      Cargando…
+      <Loader />
     </div>
   );
 }

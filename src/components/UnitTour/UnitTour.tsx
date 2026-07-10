@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { LinkHotspot, InfoHotspot, Tour360 } from "../../types/site";
 import { MARZIPANO } from "../../config/config";
 import { loadMarzipano } from "./loadMarzipano";
+import Loader from "../Loader";
 import "./unitTour.css";
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180;
@@ -128,7 +129,11 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
 
       {!ready && (
         <div className="unit-tour__status">
-          {error ? "No se pudo cargar el recorrido" : "Cargando recorrido…"}
+          {error ? (
+            "No se pudo cargar el recorrido"
+          ) : (
+            <Loader label="Cargando recorrido" />
+          )}
         </div>
       )}
 

@@ -92,6 +92,13 @@ export const site: Site = {
         {
           unitId: "floor-0-unit-01",
           label: "Oficina 01",
+          info: {
+            areaM2: 45,
+            orientation: "Norte",
+            status: "disponible",
+            rooms: 2,
+            typology: "Oficina",
+          },
           renders: demoRenders,
           tour360: demoTour,
           hotspot: { x: 0.35, y: 0.5 },
@@ -99,6 +106,13 @@ export const site: Site = {
         {
           unitId: "floor-0-unit-02",
           label: "Oficina 02",
+          info: {
+            areaM2: 62,
+            orientation: "Sur",
+            status: "reservado",
+            rooms: 3,
+            typology: "Oficina",
+          },
           renders: demoRenders,
           tour360: demoTour,
           hotspot: { x: 0.65, y: 0.5 },
@@ -114,6 +128,13 @@ export const site: Site = {
         {
           unitId: "floor-1-unit-01",
           label: "Oficina 01",
+          info: {
+            areaM2: 48,
+            orientation: "Este",
+            status: "disponible",
+            rooms: 2,
+            typology: "Oficina",
+          },
           renders: demoRenders,
           tour360: demoTour,
           hotspot: { x: 0.35, y: 0.5 },
@@ -121,6 +142,13 @@ export const site: Site = {
         {
           unitId: "floor-1-unit-02",
           label: "Oficina 02",
+          info: {
+            areaM2: 70,
+            orientation: "Oeste",
+            status: "vendido",
+            rooms: 3,
+            typology: "Oficina",
+          },
           renders: demoRenders,
           tour360: demoTour,
           hotspot: { x: 0.65, y: 0.5 },
@@ -136,6 +164,13 @@ export const site: Site = {
         {
           unitId: "floor-2-unit-01",
           label: "Oficina 01",
+          info: {
+            areaM2: 95,
+            orientation: "N/E",
+            status: "disponible",
+            rooms: 4,
+            typology: "Oficina premium",
+          },
           renders: demoRenders,
           tour360: demoTour,
           hotspot: { x: 0.5, y: 0.5 },

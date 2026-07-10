@@ -67,9 +67,23 @@ export interface UnitHotspot {
   y: number;
 }
 
+/** Estado comercial de la unidad (colorea el marcador y el badge del modal). */
+export type UnitStatus = "disponible" | "reservado" | "vendido";
+
+/** Metadata de la unidad, mostrada en el mini-modal del hotspot. El "nivel" NO
+ *  va acá: se deriva del piso al que pertenece la unidad (Floor.floorNumber). */
+export interface UnitInfo {
+  areaM2?: number;
+  orientation?: string; // "Norte", "N/E", "Sur"…
+  status?: UnitStatus;
+  rooms?: number; // ambientes/dormitorios
+  typology?: string; // "Monoambiente", "2 ambientes", "Oficina"…
+}
+
 export interface Unit {
   unitId: string;
   label: string;
+  info?: UnitInfo;
   renders: ImageRef[];
   tour360: Tour360;
   /** Ubicación del hotspot sobre el floorplan. Sin esto, la unidad no dibuja

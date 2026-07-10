@@ -79,6 +79,48 @@ img {
   font-size: 0.78rem;
 }
 
+/* Bouncing dots — feedback de carga. Los puntos toman `currentColor`, así que
+   heredan el color del contenedor (negro en claro, blanco sobre el tour). */
+@keyframes u-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  40% {
+    transform: translateY(-7px);
+    opacity: 1;
+  }
+}
+
+.u-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.u-dots > span {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: u-bounce 1.2s infinite ease-in-out both;
+}
+
+.u-dots > span:nth-child(1) {
+  animation-delay: -0.24s;
+}
+.u-dots > span:nth-child(2) {
+  animation-delay: -0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .u-dots > span {
+    animation-duration: 2.4s;
+  }
+}
+
 /* Borde grueso característico */
 .u-border {
   border: 1px solid var(--line);

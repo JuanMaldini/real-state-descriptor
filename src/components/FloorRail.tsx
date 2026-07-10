@@ -36,10 +36,11 @@ export default function FloorRail({
                 title={floor.label}
                 aria-label={floor.label}
                 className={`flex items-center justify-center py-4 u-label transition-colors ${
-                  active
-                    ? "bg-[var(--fg)] text-[var(--fg-inverse)]"
-                    : "hover:bg-[var(--muted-bg)]"
+                  active ? "" : "hover:bg-[var(--muted-bg)]"
                 }`}
+                style={
+                  active ? { background: "#000000", color: "#ffffff" } : undefined
+                }
               >
                 {short}
               </NavLink>
