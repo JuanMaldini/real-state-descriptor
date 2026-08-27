@@ -54,12 +54,26 @@ export default function Home() {
       {/* HERO — pantalla completa */}
       <section
         className="relative overflow-hidden bg-[var(--bg-inverse)] text-[var(--fg-inverse)]"
-        style={{ height: "calc(100dvh - var(--nav-h))" }}
+        style={{
+          // Alto = el que necesita el video para verse entero a todo el ancho;
+          // nunca menos que la pantalla visible (moviles, donde el 16/9 seria
+          // una franja). El sobrante empuja la seccion blanca hacia abajo.
+          // width fijo: sin esto, con aspect-ratio y alto definido por
+          // minHeight (pantallas angostas) el ancho se puede derivar del alto y
+          // la seccion se desborda a la derecha (el video deja de verse al centro).
+          width: "100%",
+          maxWidth: "100%",
+          aspectRatio: "var(--hero-video-aspect)",
+          minHeight: "calc(100dvh - var(--nav-h))",
+        }}
       >
         {site.building.heroVideo ? (
           <video
             src={site.building.heroVideo}
-            className="absolute inset-0 h-full w-full object-cover object-top"
+            className="absolute inset-0 h-full w-full object-cover"
+            // Recorte: centrado en X (en movil sobra ancho y se corta parejo a
+            // ambos lados) y anclado abajo en Y (se ve la parte inferior).
+            style={{ objectPosition: "50% 100%" }}
             autoPlay
             loop
             muted={videoMuted}
@@ -77,7 +91,11 @@ export default function Home() {
             onClick={() => setVideoMuted((muted) => !muted)}
             aria-label={videoMuted ? "Activar sonido" : "Silenciar"}
             title={videoMuted ? "Activar sonido" : "Silenciar"}
-            className="group absolute bottom-6 right-6 z-30 flex h-10 w-10 items-center justify-center u-border bg-white transition-colors hover:bg-black"
+            className="group absolute right-6 z-30 flex h-10 w-10 items-center justify-center u-border bg-white transition-colors hover:bg-black"
+            style={{
+              top: "calc(100dvh - var(--nav-h) - 1.5rem)",
+              transform: "translateY(-100%)",
+            }}
           >
             {videoMuted ? (
               <VolumeX size={18} className="text-black group-hover:text-white" />
@@ -88,7 +106,15 @@ export default function Home() {
         ) : null}
 
         {/* Título + CTAs */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col gap-6 p-6 md:p-10">
+        {/* Anclado al borde inferior de la pantalla visible (no del hero, que
+            puede ser mas alto): asi el titulo y los CTAs no se mueven. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 z-20 flex flex-col gap-6 p-6 md:p-10"
+          style={{
+            top: "calc(100dvh - var(--nav-h))",
+            transform: "translateY(-100%)",
+          }}
+        >
           <h1 className="u-wordmark text-3xl md:text-5xl leading-none">
             {site.building.name}
           </h1>

@@ -14,6 +14,10 @@
   --muted-bg: #f2f2f2;
 
   --nav-h: 56px;
+  /* Relacion de aspecto del video del hero (1280x720). El hero toma esta
+     altura para que el frame entre completo: nada recortado arriba (pegado al
+     navbar) ni abajo. El excedente empuja la seccion blanca hacia abajo. */
+  --hero-video-aspect: 16 / 9;
 
   --font: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui, sans-serif;
   --tracking-wide: 0.18em;
