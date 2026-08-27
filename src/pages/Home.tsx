@@ -59,7 +59,7 @@ export default function Home() {
         {site.building.heroVideo ? (
           <video
             src={site.building.heroVideo}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-top"
             autoPlay
             loop
             muted={videoMuted}
