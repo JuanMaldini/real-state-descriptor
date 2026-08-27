@@ -53,7 +53,7 @@ export default function Home() {
     <>
       {/* HERO — pantalla completa */}
       <section
-        className="relative overflow-hidden bg-[var(--bg-inverse)] text-[var(--fg-inverse)]"
+        className="relative overflow-clip bg-[var(--bg-inverse)] text-[var(--fg-inverse)]"
         style={{
           // Alto = el que necesita el video para verse entero a todo el ancho;
           // nunca menos que la pantalla visible (moviles, donde el 16/9 seria
@@ -85,53 +85,46 @@ export default function Home() {
           />
         ) : null}
 
-        {site.building.heroVideo ? (
-          <button
-            type="button"
-            onClick={() => setVideoMuted((muted) => !muted)}
-            aria-label={videoMuted ? "Activar sonido" : "Silenciar"}
-            title={videoMuted ? "Activar sonido" : "Silenciar"}
-            className="group absolute right-6 z-30 flex h-10 w-10 items-center justify-center u-border bg-white transition-colors hover:bg-black"
-            style={{
-              top: "calc(100dvh - var(--nav-h) - 1.5rem)",
-              transform: "translateY(-100%)",
-            }}
-          >
-            {videoMuted ? (
-              <VolumeX size={18} className="text-black group-hover:text-white" />
-            ) : (
-              <Volume2 size={18} className="text-black group-hover:text-white" />
-            )}
-          </button>
-        ) : null}
+        {/* Capa de UI del hero. Ocupa todo el contenedor del video; su hijo es
+            sticky al fondo del viewport: baja con el scroll hasta que termina
+            el contenedor y ahi se frena, sin salirse nunca de el. */}
+        <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-end">
+          <div className="sticky bottom-0 flex flex-col gap-6 p-6 md:p-10">
+            {site.building.heroVideo ? (
+              <button
+                type="button"
+                onClick={() => setVideoMuted((muted) => !muted)}
+                aria-label={videoMuted ? "Activar sonido" : "Silenciar"}
+                title={videoMuted ? "Activar sonido" : "Silenciar"}
+                className="group pointer-events-auto absolute bottom-6 right-6 z-30 flex h-10 w-10 items-center justify-center u-border bg-white transition-colors hover:bg-black"
+              >
+                {videoMuted ? (
+                  <VolumeX size={18} className="text-black group-hover:text-white" />
+                ) : (
+                  <Volume2 size={18} className="text-black group-hover:text-white" />
+                )}
+              </button>
+            ) : null}
 
-        {/* Título + CTAs */}
-        {/* Anclado al borde inferior de la pantalla visible (no del hero, que
-            puede ser mas alto): asi el titulo y los CTAs no se mueven. */}
-        <div
-          className="pointer-events-none absolute inset-x-0 z-20 flex flex-col gap-6 p-6 md:p-10"
-          style={{
-            top: "calc(100dvh - var(--nav-h))",
-            transform: "translateY(-100%)",
-          }}
-        >
-          <h1 className="u-wordmark text-3xl md:text-5xl leading-none">
-            {site.building.name}
-          </h1>
-          <div className="pointer-events-auto flex flex-wrap gap-3">
-            <Link
-              to={interioresTo}
-              className="u-label border px-5 py-3 transition-opacity hover:opacity-80"
-              style={{ background: "#ffffff", color: "#000000", borderColor: "#000000" }}
-            >
-              {HERO.ctas.interiores}
-            </Link>
-            <Link
-              to={ROUTES.building}
-              className="u-label border border-[var(--fg-inverse)] px-5 py-3 transition-colors hover:bg-[var(--fg-inverse)] hover:text-[var(--bg-inverse)]"
-            >
-              {HERO.ctas.pisos}
-            </Link>
+            {/* Título + CTAs */}
+            <h1 className="u-wordmark text-3xl md:text-5xl leading-none">
+              {site.building.name}
+            </h1>
+            <div className="pointer-events-auto flex flex-wrap gap-3">
+              <Link
+                to={interioresTo}
+                className="u-label border px-5 py-3 transition-opacity hover:opacity-80"
+                style={{ background: "#ffffff", color: "#000000", borderColor: "#000000" }}
+              >
+                {HERO.ctas.interiores}
+              </Link>
+              <Link
+                to={ROUTES.building}
+                className="u-label border border-[var(--fg-inverse)] px-5 py-3 transition-colors hover:bg-[var(--fg-inverse)] hover:text-[var(--bg-inverse)]"
+              >
+                {HERO.ctas.pisos}
+              </Link>
+            </div>
           </div>
         </div>
 
