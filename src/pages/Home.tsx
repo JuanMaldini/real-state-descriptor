@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Volume2, VolumeX } from "lucide-react";
 import { useSite } from "../context/SiteContext";
 import { firstUnit } from "../lib/site";
-import { CONTACT, HERO, MOTION, ROUTES, SITE } from "../config/config";
+import { CONTACT, HERO, ROUTES, SITE } from "../config/config";
 import Loader from "../components/Loader";
 import ImageWithLoader from "../components/ImageWithLoader";
 import { startPreload } from "../lib/preload";
@@ -13,9 +14,10 @@ import { startPreload } from "../lib/preload";
 export default function Home() {
   const site = useSite();
   const location = useLocation();
-  const [index, setIndex] = useState(0);
   // Lightbox de galería: URL de la imagen abierta, o null.
   const [lightbox, setLightbox] = useState<string | null>(null);
+  // El autoplay con sonido es bloqueado por los navegadores en la primera visita.
+  const [videoMuted, setVideoMuted] = useState(true);
 
   // Cerrar el lightbox con Escape (además del click).
   useEffect(() => {
@@ -40,11 +42,6 @@ export default function Home() {
 
   if (!site) return <PageLoading />;
 
-  const images = site.building.heroRenders;
-  const count = images.length;
-  const go = (dir: 1 | -1) =>
-    setIndex((i) => (count ? (i + dir + count) % count : 0));
-
   const first = firstUnit(site);
   const interioresTo = first
     ? ROUTES.tour(first.floor.floorId, first.unit.unitId)
@@ -59,46 +56,36 @@ export default function Home() {
         className="relative overflow-hidden bg-[var(--bg-inverse)] text-[var(--fg-inverse)]"
         style={{ height: "calc(100dvh - var(--nav-h))" }}
       >
-        {/* Capas de imagen con crossfade */}
-        {images.map((img, i) => (
-          <img
-            key={img.id}
-            src={img.imageUrl}
-            alt={img.caption ?? site.building.name}
+        {site.building.heroVideo ? (
+          <video
+            src={site.building.heroVideo}
             className="absolute inset-0 h-full w-full object-cover"
-            style={{
-              opacity: i === index ? 1 : 0,
-              transition: `opacity ${MOTION.heroFadeMs}ms ease`,
+            autoPlay
+            loop
+            muted={videoMuted}
+            playsInline
+            aria-label={site.building.name}
+            onCanPlay={(event) => {
+              event.currentTarget.play().catch(() => undefined);
             }}
-            draggable={false}
           />
-        ))}
+        ) : null}
 
-        {/* Zonas laterales prev/next */}
-        {count > 1 && (
-          <>
-            <button
-              aria-label="Anterior"
-              onClick={() => go(-1)}
-              className="group absolute left-0 top-0 bottom-0 z-10 flex items-center justify-start pl-4"
-              style={{ width: `${HERO.navZoneWidthPct}%` }}
-            >
-              <span className="u-label text-2xl opacity-60 transition-opacity group-hover:opacity-100">
-                ‹
-              </span>
-            </button>
-            <button
-              aria-label="Siguiente"
-              onClick={() => go(1)}
-              className="group absolute right-0 top-0 bottom-0 z-10 flex items-center justify-end pr-4"
-              style={{ width: `${HERO.navZoneWidthPct}%` }}
-            >
-              <span className="u-label text-2xl opacity-60 transition-opacity group-hover:opacity-100">
-                ›
-              </span>
-            </button>
-          </>
-        )}
+        {site.building.heroVideo ? (
+          <button
+            type="button"
+            onClick={() => setVideoMuted((muted) => !muted)}
+            aria-label={videoMuted ? "Activar sonido" : "Silenciar"}
+            title={videoMuted ? "Activar sonido" : "Silenciar"}
+            className="group absolute bottom-6 right-6 z-30 flex h-10 w-10 items-center justify-center u-border bg-white transition-colors hover:bg-black"
+          >
+            {videoMuted ? (
+              <VolumeX size={18} className="text-black group-hover:text-white" />
+            ) : (
+              <Volume2 size={18} className="text-black group-hover:text-white" />
+            )}
+          </button>
+        ) : null}
 
         {/* Título + CTAs */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col gap-6 p-6 md:p-10">
@@ -122,13 +109,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Indicador de posición */}
-        {count > 1 && (
-          <div className="absolute right-6 top-6 z-20 u-label text-sm">
-            {String(index + 1).padStart(2, "0")} /{" "}
-            {String(count).padStart(2, "0")}
-          </div>
-        )}
       </section>
 
       {/* INFO / DESCRIPCIÓN — entre hero y galería */}

@@ -13,6 +13,7 @@ export interface GalleryItem {
   imageUrl: string;
   title?: string;
   tags?: string[];
+  mediaType?: "image" | "video";
 }
 
 /** Parámetros de vista de Marzipano, en GRADOS (se convierten a rad en el visor). */
@@ -103,6 +104,7 @@ export interface Building {
   id: string;
   name: string;
   heroRenders: ImageRef[];
+  heroVideo?: string;
 }
 
 export interface Site {

@@ -1,35 +1,18 @@
 // =============================================================================
-// LOADER DEL SITE — capa única de acceso a datos.
-// Lee la fila única de la colección PocketBase (campo `json` = objeto Site).
-// Si PB no está configurado o falla, cae a los datos locales (src/data/site.ts)
-// para no romper dev/demo. Nadie más en la app toca la fuente de datos: todas
-// las páginas y componentes consumen desde acá.
+// LOADER DEL SITE — capa única de acceso a datos locales.
+// Todas las páginas y componentes consumen la fuente canónica desde acá.
 // =============================================================================
 import type { Floor, Site, Unit } from "../types/site";
 import { site as localSite } from "../data/site";
-import pb, { PB_COLLECTION, PB_ENABLED } from "./pocketbase";
 
-let cache: Site | null = null;
-
-/** Carga (y cachea) el JSON único del sitio desde PocketBase, con fallback local. */
+/** Carga los datos locales del sitio. */
 export async function loadSite(): Promise<Site> {
-  if (cache) return cache;
-  if (PB_ENABLED) {
-    try {
-      const rec = await pb.collection(PB_COLLECTION).getFirstListItem("");
-      cache = rec.json as Site;
-      return cache;
-    } catch (err) {
-      console.warn("[site] PocketBase no disponible; uso datos locales.", err);
-    }
-  }
-  cache = localSite;
-  return cache;
+  return localSite;
 }
 
-/** Acceso síncrono al site ya cargado (o al local). Útil en render tras el fetch. */
+/** Acceso síncrono a los datos locales del sitio. */
 export function getSite(): Site {
-  return cache ?? localSite;
+  return localSite;
 }
 
 // ---- Selectores derivados (no repetir lógica de búsqueda en cada página) ----
