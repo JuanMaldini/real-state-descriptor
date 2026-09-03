@@ -22,6 +22,7 @@ const demoTour: Tour360 = {
       equirectWidth: 4000,
       linkHotspots: [
         { yaw: 65.299259, pitch: 5.710588, target: "scene-9" },
+        { yaw: 135, pitch: 4.0, target: "scene-10" },
         { yaw: -179.963724, pitch: -26.897445, target: "scene-1" },
         { yaw: -62.368979, pitch: -13.518321, target: "scene-7" },
       ],
@@ -102,6 +103,28 @@ const demoTour: Tour360 = {
       equirectWidth: 4000,
       linkHotspots: [
         { yaw: 133.690591, pitch: -1.167238, target: "scene-2" },
+      ],
+      infoHotspots: [],
+    },
+    {
+      id: "scene-10",
+      name: "Baño 1",
+      imageUrl: "/assets/demo/tour/BANO2.jpg",
+      equirectWidth: 4000,
+      linkHotspots: [
+        { yaw: 10, pitch: 175, target: "scene-2" },
+        { yaw: 150, pitch: -115, target: "scene-11" },
+      ],
+      infoHotspots: [],
+    },
+    {
+      id: "scene-11",
+      name: "Baño 2",
+      imageUrl: "/assets/demo/tour/BANO1.jpg",
+      equirectWidth: 4000,
+      linkHotspots: [
+        { yaw: 10, pitch: 175, target: "scene-2" },
+        { yaw: 180, pitch: -70, target: "scene-10" },
       ],
       infoHotspots: [],
     },
