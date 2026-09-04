@@ -1,4 +1,4 @@
-import type { Site, Tour360 } from "../types/site";
+  import type { Site, Tour360 } from "../types/site";
 
 const demoTour: Tour360 = {
   scenes: [
@@ -7,6 +7,7 @@ const demoTour: Tour360 = {
       name: "Pasillo 2",
       imageUrl: "/assets/demo/tour/PASILLO2.jpg",
       equirectWidth: 4000,
+      offsetX: 0,
       initialViewParameters: { pitch: 0, yaw: 0, fov: 110 },
       linkHotspots: [
         { yaw: -91.102272, pitch: -25.726284, target: "scene-3" },
@@ -20,6 +21,7 @@ const demoTour: Tour360 = {
       name: "Pasillo 3",
       imageUrl: "/assets/demo/tour/PASILLO3.jpg",
       equirectWidth: 4000,
+      offsetX: 0,
       linkHotspots: [
         { yaw: 65.299259, pitch: 5.710588, target: "scene-9" },
         { yaw: 135, pitch: 4.0, target: "scene-10" },
@@ -33,6 +35,7 @@ const demoTour: Tour360 = {
       name: "Pasillo 1",
       imageUrl: "/assets/demo/tour/PASILLO1.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: 0.151722, pitch: -26.129494, target: "scene-1" },
         { yaw: -178.646272, pitch: -19.835634, target: "scene-4" },
@@ -44,6 +47,7 @@ const demoTour: Tour360 = {
       name: "Cocina",
       imageUrl: "/assets/demo/tour/COCINA.jpg",
       equirectWidth: 4000,
+      offsetX: 0,
       linkHotspots: [
         { yaw: -173.254996, pitch: -19.350127, target: "scene-5" },
         { yaw: 89.329722, pitch: -10.354048, target: "scene-1" },
@@ -57,6 +61,7 @@ const demoTour: Tour360 = {
       name: "Cocina 1",
       imageUrl: "/assets/demo/tour/COCINA1.jpg",
       equirectWidth: 4000,
+      offsetX: 0,
       linkHotspots: [
         { yaw: 2.363699, pitch: -18.788953, target: "scene-4" },
         { yaw: 0.266835, pitch: -1.34962, target: "scene-6" },
@@ -68,6 +73,7 @@ const demoTour: Tour360 = {
       name: "Living",
       imageUrl: "/assets/demo/tour/LIVING.jpg",
       equirectWidth: 4000,
+      offsetX: 0,
       linkHotspots: [
         { yaw: -176.944548, pitch: -13.907572, target: "scene-4" },
         { yaw: -176.640759, pitch: 0.152476, target: "scene-5" },
@@ -79,6 +85,7 @@ const demoTour: Tour360 = {
       name: "Habitación",
       imageUrl: "/assets/demo/tour/HABITACION.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: -107.64571, pitch: -35.177651, target: "scene-8" },
         { yaw: 7.453017, pitch: -4.194306, target: "scene-2" },
@@ -90,6 +97,7 @@ const demoTour: Tour360 = {
       name: "Habitación 2",
       imageUrl: "/assets/demo/tour/HABITACION2.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: 51.789679, pitch: -35.548295, target: "scene-7" },
         { yaw: 42.098609, pitch: -7.562748, target: "scene-2" },
@@ -101,6 +109,7 @@ const demoTour: Tour360 = {
       name: "Habitación B",
       imageUrl: "/assets/demo/tour/HABITACIONB.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: 133.690591, pitch: -1.167238, target: "scene-2" },
       ],
@@ -111,6 +120,7 @@ const demoTour: Tour360 = {
       name: "Baño 1",
       imageUrl: "/assets/demo/tour/BANO2.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: 10, pitch: 175, target: "scene-2" },
         { yaw: 150, pitch: -115, target: "scene-11" },
@@ -122,6 +132,7 @@ const demoTour: Tour360 = {
       name: "Baño 2",
       imageUrl: "/assets/demo/tour/BANO1.jpg",
       equirectWidth: 4000,
+      offsetX: -90,
       linkHotspots: [
         { yaw: 10, pitch: 175, target: "scene-2" },
         { yaw: 180, pitch: -70, target: "scene-10" },

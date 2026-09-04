@@ -44,6 +44,11 @@ export interface TourScene {
   name?: string;
   imageUrl: string;
   equirectWidth: number;
+  /** Corrección de yaw (grados) para esta escena: se suma sólo a
+   *  initialViewParameters.yaw (hacia dónde mira la cámara al entrar). Los
+   *  hotspots NO se offsetean: quedan fijos en la esfera de la panorámica, así
+   *  que acompañan visualmente el giro en vez de quedar pegados a la pantalla. */
+  offsetX?: number;
   initialViewParameters?: ViewParameters;
   linkHotspots: LinkHotspot[];
   infoHotspots: InfoHotspot[];

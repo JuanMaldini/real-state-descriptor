@@ -55,9 +55,10 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
             { width: sceneData.equirectWidth || 4000 },
           ]);
           const iv = sceneData.initialViewParameters;
+          const offsetX = sceneData.offsetX ?? 0;
           const view = new Marzipano.RectilinearView(
             {
-              yaw: degToRad(iv?.yaw ?? 0),
+              yaw: degToRad((iv?.yaw ?? 0) + offsetX),
               pitch: degToRad(iv?.pitch ?? 0),
               fov: degToRad(iv?.fov ?? MARZIPANO.defaultFovDeg),
             },
@@ -78,15 +79,28 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
         const switchScene = (id: string) => {
           const target = byId.get(id);
           if (!target) return;
-          // Mantener el ángulo de vista actual al saltar de escena.
-          if (active) target.view.setParameters(active.view.parameters());
+          // Mantener el ángulo de vista actual al saltar de escena, corrigiendo
+          // por la diferencia de offsetX entre la escena de origen y la de
+          // destino (cada escena puede tener su propio "norte" corregido).
+          if (active) {
+            const params = active.view.parameters();
+            const deltaOffset =
+              (target.data.offsetX ?? 0) - (active.data.offsetX ?? 0);
+            target.view.setParameters({
+              ...params,
+              yaw: params.yaw + degToRad(deltaOffset),
+            });
+          }
           target.scene.switchTo();
           active = target;
           if (!disposed) setActiveSceneId(id);
         };
         switchRef.current = switchScene;
 
-        // Hotspots por escena.
+        // Hotspots por escena. Van anclados a la esfera de la panorámica con su
+        // yaw tal cual está en los datos: NO se les suma offsetX. offsetX sólo
+        // rota hacia dónde mira la cámara al entrar; como el hotspot no se mueve,
+        // queda "pegado" al mismo punto de la foto y acompaña el giro en pantalla.
         built.forEach(({ data, scene }) => {
           data.linkHotspots.forEach((h) => {
             scene
