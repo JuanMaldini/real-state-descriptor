@@ -19210,7 +19210,8 @@ function createShaderProgram(gl, vertexSrc, fragmentSrc, attribList, uniformList
 
 
 function destroyShaderProgram(gl, shaderProgram) {
-  var shaderList = gl.getAttachedShaders(shaderProgram);
+  // null when the WebGL context has been lost.
+  var shaderList = gl.getAttachedShaders(shaderProgram) || [];
   for (var i = 0; i < shaderList.length; i++) {
     var shader = shaderList[i];
     gl.detachShader(shaderProgram, shader);

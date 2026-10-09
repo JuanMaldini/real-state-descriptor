@@ -11,6 +11,7 @@
 // (floorplans/renders) se precarga SIN crossOrigin, para matchear los <img>.
 // =============================================================================
 import type { Floor, Site } from "../types/site";
+import { panoramaStartUrl } from "./panoramaTiles";
 
 type Asset = { url: string; cors: boolean };
 type FloorQueue = { floorId: string; assets: Asset[] };
@@ -46,7 +47,9 @@ function floorAssets(floor: Floor): Asset[] {
   const out: Asset[] = [{ url: floor.floorplanImage, cors: false }];
   for (const unit of floor.units) {
     for (const scene of unit.tour360.scenes) {
-      out.push({ url: scene.imageUrl, cors: true }); // panorámica → Marzipano/WebGL
+      // Panorámica → Marzipano/WebGL. Con tiles alcanza el preview: el visor
+      // pide el resto según lo que se ve.
+      out.push({ url: panoramaStartUrl(scene.imageUrl), cors: true });
     }
     for (const render of unit.renders) {
       out.push({ url: render.imageUrl, cors: false });

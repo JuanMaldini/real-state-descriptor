@@ -1,11 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import type { LinkHotspot, InfoHotspot, Tour360 } from "../../types/site";
+import type { LinkHotspot, InfoHotspot, Tour360, TourScene } from "../../types/site";
 import { MARZIPANO } from "../../config/config";
 import { loadMarzipano } from "./loadMarzipano";
+import { panoramaTiles } from "../../lib/panoramaTiles";
 import Loader from "../Loader";
 import "./unitTour.css";
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180;
+
+// Fuente, geometría y zoom máximo de una escena: tiles multiresolución de cubo
+// si el build los generó, si no la equirectangular original.
+function sceneLayer(Marzipano: any, sceneData: TourScene) {
+  const tiles = panoramaTiles(sceneData.imageUrl);
+  if (tiles) {
+    return {
+      source: Marzipano.ImageUrlSource.fromString(`${tiles.base}/{z}/{f}/{y}/{x}.jpg`, {
+        cubeMapPreviewUrl: `${tiles.base}/preview.jpg`,
+      }),
+      geometry: new Marzipano.CubeGeometry(tiles.levels),
+      maxResolution: tiles.width,
+      // Sólo fija el preview (6 caras chicas): cada escena tiene algo que
+      // mostrar al instante, sin ocupar memoria de GPU.
+      pinFirstLevel: true,
+    };
+  }
+  return {
+    source: Marzipano.ImageUrlSource.fromString(sceneData.imageUrl),
+    geometry: new Marzipano.EquirectGeometry([{ width: sceneData.equirectWidth || 4000 }]),
+    maxResolution: 10000,
+    // Fijar el único nivel subiría TODAS las panorámicas completas a la GPU al
+    // abrir el tour (en celulares eso termina en pantalla negra).
+    pinFirstLevel: false,
+  };
+}
 
 // Pin SVG brutalista (relleno blanco, trazo negro) para los link-hotspots.
 const PIN_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -20,6 +47,10 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
   const panoRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<any>(null);
   const switchRef = useRef<(id: string) => void>(() => {});
+  // Escena y vista a recuperar cuando el visor se rearma tras perder el
+  // contexto WebGL (los celulares lo cortan cuando se quedan sin memoria).
+  const restoreRef = useRef<{ sceneId: string; params: any } | null>(null);
+  const [rebuild, setRebuild] = useState(0);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
   const [activeSceneId, setActiveSceneId] = useState<string>(
@@ -43,17 +74,13 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
         });
         viewerRef.current = viewer;
 
-        const limiter = Marzipano.RectilinearView.limit.traditional(
-          10000,
-          degToRad(MARZIPANO.maxFovDeg),
-          degToRad(MARZIPANO.maxFovDeg),
-        );
-
         const built = tour.scenes.map((sceneData) => {
-          const source = Marzipano.ImageUrlSource.fromString(sceneData.imageUrl);
-          const geometry = new Marzipano.EquirectGeometry([
-            { width: sceneData.equirectWidth || 4000 },
-          ]);
+          const layer = sceneLayer(Marzipano, sceneData);
+          const limiter = Marzipano.RectilinearView.limit.traditional(
+            layer.maxResolution,
+            degToRad(MARZIPANO.maxFovDeg),
+            degToRad(MARZIPANO.maxFovDeg),
+          );
           const iv = sceneData.initialViewParameters;
           const offsetX = sceneData.offsetX ?? 0;
           const view = new Marzipano.RectilinearView(
@@ -65,10 +92,10 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
             limiter,
           );
           const scene = viewer.createScene({
-            source,
-            geometry,
+            source: layer.source,
+            geometry: layer.geometry,
             view,
-            pinFirstLevel: true,
+            pinFirstLevel: layer.pinFirstLevel,
           });
           return { data: sceneData, scene, view };
         });
@@ -118,7 +145,26 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
           });
         });
 
-        if (built[0]) switchScene(built[0].data.id);
+        // Si el navegador corta el contexto WebGL, Marzipano no se recupera:
+        // se rearma el visor donde estaba el usuario.
+        viewer.stage().addEventListener("webglcontextlost", () => {
+          if (disposed || !active) return;
+          restoreRef.current = {
+            sceneId: active.data.id,
+            params: active.view.parameters(),
+          };
+          setRebuild((n) => n + 1);
+        });
+
+        const restore = restoreRef.current;
+        restoreRef.current = null;
+        const restored = restore && byId.get(restore.sceneId);
+        if (restored) {
+          restored.view.setParameters(restore.params);
+          switchScene(restored.data.id);
+        } else if (built[0]) {
+          switchScene(built[0].data.id);
+        }
         if (!disposed) setReady(true);
       })
       .catch(() => {
@@ -135,7 +181,7 @@ export default function UnitTour({ tour }: { tour: Tour360 }) {
       }
       viewerRef.current = null;
     };
-  }, [tour]);
+  }, [tour, rebuild]);
 
   return (
     <div className="unit-tour">

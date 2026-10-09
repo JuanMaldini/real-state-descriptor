@@ -9,3 +9,7 @@ dist-ssr
 
 # PocketBase (se agrega en la migración)
 pocketbase/pb_data
+
+# Generados por scripts/build-tiles.mjs en cada build
+/public/tiles/
+/src/data/tiles.manifest.json
